@@ -4,6 +4,7 @@
 #include <ctype.h>
 
 int CONT;
+int TAM_LISTA;
 
 int* insertarNumero(int lista[],int numero,int posicion, int tam)
 {
@@ -31,7 +32,7 @@ int* insertarNumero(int lista[],int numero,int posicion, int tam)
 //def inserta_multiple(x, lst):
   //  return [inserta(x, lst, i) for i in range(len(lst) + 1)]
 
-void insertarMultiple(int numero, int lista[], int tamLista)
+int** insertarMultiple(int numero, int lista[], int tamLista)
 {
 	int **listaDevuelta;
 	listaDevuelta = (int**)malloc(sizeof(int*)*(tamLista+1));
@@ -45,6 +46,7 @@ void insertarMultiple(int numero, int lista[], int tamLista)
 	{
 		listaDevuelta[i] = insertarNumero(lista,numero,i,tamLista);
 	}
+	return listaDevuelta;
 	for (int i = 0; i < tamLista+1; ++i)
 	{
 		printf("[");
@@ -62,11 +64,22 @@ void insertarMultiple(int numero, int lista[], int tamLista)
     if len(c) == 0:
         return [[]]
     return sum([inserta_multiple(c[0], s)
-                for s in permuta(c[1:])],[])
-int** permutaciones(int lista[],int tamLista)
-{
+                for s in permuta(c[1:])],[])*/
 
-}*/
+int** permutaciones(int lista[])
+{
+	CONT++;
+	if (CONT == TAM_LISTA)
+	{
+		int lista[] = {}
+		return lista
+	}
+	else
+		
+		int insertaMul[][] = insertaMultiple(lista[0],s)
+		return 
+
+}
 
 int lenLista(int* lista)
 {
@@ -81,21 +94,21 @@ int lenLista(int* lista)
 
 int main(int argc, char const *argv[])
 {
-	int* xd;
-	xd = (int*)malloc(sizeof(int)*3);
-	xd[0] = 1;
-	xd[1] = 1;
-	xd[2] = 1;
-	for (int i = 0; i < 7; ++i)
-	{
-		printf("%i\n",xd[i]);		
-	}
+	//int* xd;
+	//xd = (int*)malloc(sizeof(int)*6);
+	int xd[] = {};
+	TAM_LISTA = 3;
+	int tamano_lista = sizeof(xd);
+	printf("TAML: %d\n",tamano_lista);
+
+
+    printf("La cantidad de elem es: %d\n",lenLista(xd));
+
 	//int tamano; ///Aplica sizeof al array
 	//int xd[8] = {1,2,3,4,5,6,7,8};
 	//int tamano_lista = sizeof(xd);
     //int tamano_entero = sizeof(int);
     //int cantidad_elem = tamano_lista/tamano_entero;
-    printf("La cantidad de elem es: %d\n",lenLista(xd));
 	//insertarMultiple(31,xd,3);
 	//insertarNumero(xd,32,0,3);
 	return 0;
