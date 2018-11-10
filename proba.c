@@ -21,11 +21,9 @@ void liberarArreglo2(char** arreglo,int largo)
 char* insertarNumero(char* lista,char numero,int posicion)
 {
 	char *listaInsertada;
-	//char str;
 	int largoArray = strlen(lista);
 	listaInsertada = (char*)malloc(sizeof(char)*(largoArray+1));
 
-	//sprintf(&str, "%d", numero);
 	listaInsertada[posicion] = numero;
 
 	int j = 0;
@@ -41,9 +39,6 @@ char* insertarNumero(char* lista,char numero,int posicion)
 	}
 	return listaInsertada;
 }
-
-//def inserta_multiple(x, lst):
-  //  return [inserta(x, lst, i) for i in range(len(lst) + 1)]
 
 char** concatenarVacia(char** l1)
 {
@@ -78,7 +73,6 @@ char** insertarMultiple(char* lista,char numero)
 		listaDevuelta[i] = (char*)malloc(sizeof(char)*(largoArray+1));
 	}
 
-	//int listaDevuelta[tamLista+1][tamLista+1];
 	for (int i = 0; i < largoArray+1; ++i)
 	{
 		listaDevuelta[i] = insertarNumero(lista,numero,i);
@@ -103,79 +97,58 @@ char** permutaciones(char *lista)
 	{
 		char  *nueva_lista; //Lista desde 1:n elementos de lista
 		char **lista_permutaciones, **lista_IM; 
-		int largoListaPerm,largoConjunto ,largoListaIM,aux1,aux2 ;
+		int largoListaPerm, largoConjuntos, largoListaIM, i, j ;
 
 		nueva_lista = (char*)malloc(sizeof(char)*(largo-1));
 		
-		for (int i = 0; i < largo-1; ++i)
+		for (i = 0; i < largo-1; ++i)
 			nueva_lista[i] = lista[i+1];
 		
 		lista_permutaciones = permutaciones(nueva_lista);
 
 		largoListaPerm = 1;
-		largoConjunto = strlen(*lista_permutaciones);
-		for (int i = largoConjunto ; i > 1 ; --i)
+		largoConjuntos = strlen(*lista_permutaciones);
+		
+		for (i = largoConjuntos ; i > 1 ; --i)
 			largoListaPerm = largoListaPerm*i;
 
-		aux1 = 0;
-		aux2 = 0;
+		j = 0;
 
-		largoListaIM = (largoConjunto+1)*largoListaPerm;
-
+		largoListaIM = (largoConjuntos+1)*largoListaPerm;
 
 		lista_IM = (char**)malloc(sizeof(char*)*(largoListaIM));
 
-		while(aux1<largoListaPerm)
+		for (i = 0; i < largoListaPerm; ++i)
 		{
-			printf("pasa?\n");
 			char **listaTemp;
-			listaTemp = insertarMultiple(lista_permutaciones[aux1],lista[0]); 
-			for (int i = 0; i < largoConjunto+1; ++i)
+			listaTemp = insertarMultiple(lista_permutaciones[i],lista[0]); 
+			for (int i = 0; i < largoConjuntos+1; ++i)
 			{
-				lista_IM[aux2] = listaTemp[i];
-				aux2++;
+				lista_IM[j] = listaTemp[i];
+				j++;
 			}
-			aux1++;
 		}
-		printf("NUEVA LISTA GENERADA\n\n");
-		for (int i = 0; i < largoListaIM; ++i)
-		{
-			
-		printf(" [%s] - ",lista_IM[i]);
-			
-		}
-		printf(" \n\nlargo = %i\n\n",largoListaIM);
+
 		NUMERO_PERMUTACIONES = largoListaIM;
 		return lista_IM;	
 	}	
 }
-
-
 
 int main(int argc, char const *argv[])
 {
 	char* xd, **xd2;
 	xd = (char*)malloc(sizeof(char)*4);
 	strcpy(xd,"1234");
-	//char xd[3] = {'1','2','4'};
-	//printf("TAMA: %lu\n",strlen(xd));
 	xd2 = permutaciones(xd);
-
 	
-	printf("PERMUTACIONES: \n\n");
+	printf("EL NUMERO DE PERMUTACIONES ES: %i \n\n",NUMERO_PERMUTACIONES);
 
 	for (int i = 0; i < NUMERO_PERMUTACIONES; ++i)
-	{
-	printf("[%s]\n",xd2[i]);
-	}
-	
+		printf(" [%s] ",xd2[i]);
 
-	//int tamano; ///Aplica sizeof al array
-	//int xd[8] = {1,2,3,4,5,6,7,8};
-	//int tamano_lista = sizeof(xd);
-    //int tamano_entero = sizeof(int);
-    //int cantidad_elem = tamano_lista/tamano_entero;
-	//insertarMultiple(31,xd,3);
-	//insertarNumero(xd,32,0,3);
-	return 0;
+	printf("\n");
+	
+	liberarArreglo1(xd);
+	liberarArreglo2(xd2,NUMERO_PERMUTACIONES);
+	
 }
