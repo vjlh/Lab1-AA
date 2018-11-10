@@ -94,10 +94,10 @@ char** permutaciones(char *lista)
 	int largo = strlen(lista);
 	if (largo == 0)
 	{
-		char** lista_vacia;
-		lista_vacia = (char**)malloc(sizeof(char*)*1);
-		lista_vacia[0] = "";
-		return lista_vacia;
+		char** empty;
+		empty = (char**)malloc(sizeof(char*)*1);
+		empty[0] = "";
+		return empty;
 
 	}
 	else
@@ -114,38 +114,41 @@ char** permutaciones(char *lista)
 		lista_permutaciones = permutaciones(nueva_lista);
 		printf("lista: [%s]\n",lista_permutaciones[0]);
 
-		int largoListaPerm = 1;
+		int largoLP = 1;
 		int largoConjunto = strlen(*lista_permutaciones);
-
-		for (int i = largoConjunto; i > 0; --i)
-			largoListaPerm = largoListaPerm*i;
+		for (int i = largoConjunto ; i > 1 ; --i)
+			largoLP = largoLP*i;
 
 		int ax = 0;
 		int ax2 = 0;
 		int largoListaIM;
 
-		if (largoListaPerm != 0)
-			largoListaIM = (largoConjunto+1)*largoListaPerm;
+		//while(lista_permutaciones[largoLP] != NULL) 
+		//	largoLP++;
+
+		int numElem = strlen(lista_permutaciones[0]);
+		if (largoLP != 0)
+			largoListaIM = (numElem+1)*largoLP;
 		else
 		{
-			largoListaPerm = 1;
+			largoLP = 1;
 			largoListaIM = 1;
 		}
 
-		printf("largo lista permutaciones %i\n",largoListaPerm);
+		printf("largo lista permutaciones %i\n",largoLP);
 		printf("largo lista permutaciones %lu\n",strlen(*lista_permutaciones));
-		printf("largo lista elementos %i\n",largoConjunto);
+		printf("largo lista elementos %i\n",numElem);
 		printf("largo lista inserciones %i\n",largoListaIM);
 
 
 		lista_IM = (char**)malloc(sizeof(char*)*(largoListaIM));
 
-		while(ax<largoListaPerm)
+		while(ax<largoLP)
 		{
 			printf("pasa?\n");
 			char **listaTemp;
 			listaTemp = insertarMultiple(lista_permutaciones[ax],lista[0]); 
-			for (int i = 0; i < largoConjunto+1; ++i)
+			for (int i = 0; i < numElem+1; ++i)
 			{
 				lista_IM[ax2] = listaTemp[i];
 				ax2++;
@@ -159,7 +162,7 @@ char** permutaciones(char *lista)
 		printf(" [%s] - ",lista_IM[i]);
 			
 		}
-		printf(" \n\nlargo = %lu\n\n",strlen(*lista_IM));
+		printf(" \n\nlargo = %i\n\n",largoLP);
 
 		return lista_IM;	
 	}	
@@ -170,7 +173,7 @@ char** permutaciones(char *lista)
 int main(int argc, char const *argv[])
 {
 	char* xd, **xd2;
-	xd = (char*)malloc(sizeof(char)*3);
+	xd = (char*)malloc(sizeof(char)*4);
 	strcpy(xd,"1234");
 	//char xd[3] = {'1','2','4'};
 	//printf("TAMA: %lu\n",strlen(xd));
