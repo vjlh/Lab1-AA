@@ -94,11 +94,11 @@ char** insertarMultiple(char* lista,char numero)
 	listaDevuelta = (char**)malloc(sizeof(char*)*(largoArray+1));
 
 	for (int i = 0; i < largoArray+1; ++i)
+	{
 		listaDevuelta[i] = (char*)malloc(sizeof(char)*(largoArray+1));
-
-	for (int i = 0; i < largoArray+1; ++i)
 		listaDevuelta[i] = insertarNumero(lista,numero,i);
-	
+	}
+
 	return listaDevuelta;
 }
 
@@ -116,8 +116,8 @@ char** permutaciones(char *lista)
 	else
 	{
 		char  *nueva_lista; //Lista desde 1:n elementos de lista
-		char **lista_permutaciones, **lista_IM; 
-		int largoListaPerm, largoConjuntos, largoListaIM, i, j;
+		char **lista_permutaciones, **lista_permuFinal; 
+		int largoListaPerm, largoConjuntos, permutacionesTotales, i, j;
 
 		nueva_lista = (char*)malloc(sizeof(char)*(largo-1));
 		
@@ -134,9 +134,9 @@ char** permutaciones(char *lista)
 
 		j = 0;
 
-		largoListaIM = (largoConjuntos+1)*largoListaPerm;
+		permutacionesTotales = (largoConjuntos+1)*largoListaPerm;
 
-		lista_IM = (char**)malloc(sizeof(char*)*(largoListaIM));
+		lista_permuFinal = (char**)malloc(sizeof(char*)*(permutacionesTotales));
 
 		for (i = 0; i < largoListaPerm; ++i)
 		{
@@ -144,18 +144,18 @@ char** permutaciones(char *lista)
 			listaTemp = insertarMultiple(lista_permutaciones[i],lista[0]); 
 			for (int i = 0; i < largoConjuntos+1; ++i)
 			{
-				lista_IM[j] = listaTemp[i];
+				lista_permuFinal[j] = listaTemp[i];
 				j++;
 			}
 		}
 
-		NUMERO_PERMUTACIONES = largoListaIM;
-		return lista_IM;	
+		NUMERO_PERMUTACIONES = permutacionesTotales;
+		return lista_permuFinal;	
 	}	
 }
 
 void recibirNombreArchivo() 
-{ //Esta función es la que se encarga de pedirle al usuario el nombre de cada uno de los archivos de entrada
+{
 	FILE* archivo; //
 	NOMBRE_ARCHIVO = (char*)malloc(sizeof(char)*25);//Estas variables globales definidas en las definiciones
 	printf("Para comenzar primero se necesita el nombre de sus dos archivos de entrada junto a su formato\n");
