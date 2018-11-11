@@ -3,9 +3,10 @@
 #include <string.h>
 #include <ctype.h>
 
+int NUMERO_NODOS;
+int** MATRIZ_ADYACENCIA;
 int NUMERO_PERMUTACIONES;
 char *NOMBRE_ARCHIVO;
-int** MATRIZ_ADYACENCIA
 
 
 void liberarArreglo1(char* arreglo)
@@ -13,7 +14,15 @@ void liberarArreglo1(char* arreglo)
 	free(arreglo);
 }
 
-void liberarArreglo2(char** arreglo,int largo)
+void liberarArregloChar(char** arreglo,int largo)
+{
+	for (int i = 0; i < largo; ++i)
+	{
+		free(arreglo[i]);
+	}
+	free(arreglo);
+}
+void liberarArregloInt(int** arreglo,int largo)
 {
 	for (int i = 0; i < largo; ++i)
 	{
@@ -43,27 +52,39 @@ char* insertarNumero(char* lista,char numero,int posicion)
 	return listaInsertada;
 }
 
-char** concatenarVacia(char** l1)
-{
-	char **contatenada;	
-	char* empty = "";
+void buscarMinimo(char** permutadas){
+	FILE* archivo_salida;
+	int numNodos = strlen(permutadas[0]);
+	int minimo = 12345678;
+	int indice = 0;
 
-	int i = 0;
-	int largoTotal = 0;
-
-	while (l1[i] != NULL)
+	for (int i = 0; i < NUMERO_PERMUTACIONES; ++i)
 	{
-		largoTotal++;
-		i++;
+		int costo = 0;
+		for (int j = 0; j < NUMERO_NODOS-1; ++j)
+		{
+			int n1 = permutadas[i][j] - '0' - 1;
+			int n2 = permutadas[i][j+1] - '0' - 1;
+			costo = costo + MATRIZ_ADYACENCIA[n1][n2];
+		}
+		if (costo < minimo)
+		{
+			minimo = costo;
+			indice = i;
+		}
 	}
-	
-	contatenada = (char**)malloc(sizeof(char*)*(largoTotal+1));
+	minimo = minimo + 2; //Se le suma 2 por el costo de ir a la capital y volver a esta
 
-	for (int i = 0; i < largoTotal; ++i)
-		contatenada[i] = l1[i];
-	contatenada[largoTotal] = empty;
+	archivo_salida = fopen("salida.out","w");
+	fprintf(archivo_salida,"Costo mínimo: %i \n\n0 - ",minimo);
 
-	return contatenada;
+	for (int i = 0; i < numNodos; ++i)
+		fprintf(archivo_salida,"%c - ",permutadas[indice][i]);
+
+	fprintf(archivo_salida,"0");
+	fclose(archivo_salida);
+	printf("\nEl programa ha terminado...\n");
+
 }
 
 char** insertarMultiple(char* lista,char numero)
@@ -71,18 +92,14 @@ char** insertarMultiple(char* lista,char numero)
 	char **listaDevuelta;
 	int largoArray = strlen(lista);
 	listaDevuelta = (char**)malloc(sizeof(char*)*(largoArray+1));
-	for (int i = 0; i < largoArray+1; ++i)
-	{
-		listaDevuelta[i] = (char*)malloc(sizeof(char)*(largoArray+1));
-	}
 
 	for (int i = 0; i < largoArray+1; ++i)
-	{
+		listaDevuelta[i] = (char*)malloc(sizeof(char)*(largoArray+1));
+
+	for (int i = 0; i < largoArray+1; ++i)
 		listaDevuelta[i] = insertarNumero(lista,numero,i);
-	}
 	
 	return listaDevuelta;
-
 }
 
 char** permutaciones(char *lista)
@@ -100,7 +117,7 @@ char** permutaciones(char *lista)
 	{
 		char  *nueva_lista; //Lista desde 1:n elementos de lista
 		char **lista_permutaciones, **lista_IM; 
-		int largoListaPerm, largoConjuntos, largoListaIM, i, j ;
+		int largoListaPerm, largoConjuntos, largoListaIM, i, j;
 
 		nueva_lista = (char*)malloc(sizeof(char)*(largo-1));
 		
@@ -139,22 +156,22 @@ char** permutaciones(char *lista)
 
 void recibirNombreArchivo() 
 { //Esta función es la que se encarga de pedirle al usuario el nombre de cada uno de los archivos de entrada
-	FILE* arch; //Almacenandolos en NOMBRE_ARCHIVO_1 y NOMBRE_ARCHIVO_2 respectivamente, siendo
+	FILE* archivo; //
 	NOMBRE_ARCHIVO = (char*)malloc(sizeof(char)*25);//Estas variables globales definidas en las definiciones
 	printf("Para comenzar primero se necesita el nombre de sus dos archivos de entrada junto a su formato\n");
 	printf("Por ejemplo 'entrada1.txt' o prueba1.txt\n\nRecuerde que el primero es el que contiene las instrucciones y el segundo las lineas de control\n");
 	do
 	{
-		printf("\nIngrese el nombre del primer archivo solicitado: ");
+		printf("\nIngrese el nombre del archivo solicitado: ");
 		scanf("%s",NOMBRE_ARCHIVO);
 		while(getchar()!='\n');
-		arch = fopen(NOMBRE_ARCHIVO,"r");
+		archivo = fopen(NOMBRE_ARCHIVO,"r");
 		
-		if (arch == NULL) 
+		if (archivo == NULL) 
 			printf("No se encuentra archivo con ese nombre, intente nuevamente\n");
 		
-	} while (arch == NULL);
-	fclose(arch);
+	} while (archivo == NULL);
+	fclose(archivo);
 }
 
 
@@ -167,15 +184,14 @@ void leerArchivosYGuardarDatos()		//Esta funcion se encarga del proceso de lectu
 	archivo_nodos = fopen(NOMBRE_ARCHIVO,"r");
 	fgets(buffer,3,archivo_nodos);
 	
-	int nodos = atoi(buffer);
-	printf("NODOS: %i\n",nodos);
-	MATRIZ_ADYACENCIA = (int**)malloc(sizeof(int*)*nodos)
+	NUMERO_NODOS = atoi(buffer);
+	MATRIZ_ADYACENCIA = (int**)malloc(sizeof(int*)*NUMERO_NODOS);
 	
-	for (int i = 0; i < nodos; ++i)
+	for (int i = 0; i < NUMERO_NODOS; ++i)
 	{
-		MATRIZ_ADYACENCIA[i] = (int*)malloc(sizeof(int)*nodos);
+		MATRIZ_ADYACENCIA[i] = (int*)malloc(sizeof(int)*NUMERO_NODOS);
 
-		for (int j = 0; j < nodos; ++j)
+		for (int j = 0; j < NUMERO_NODOS; ++j)
 			MATRIZ_ADYACENCIA[i][j] = 0;
 	}
 
@@ -207,7 +223,6 @@ void leerArchivosYGuardarDatos()		//Esta funcion se encarga del proceso de lectu
 
 			valor3 = strtok(NULL," ");
 			costo = atoi(valor3);
-			printf("%s %s %s\n",valor1,valor2,valor3);
 
 			MATRIZ_ADYACENCIA[nodo1][nodo2] = costo;
 			MATRIZ_ADYACENCIA[nodo2][nodo1] = costo;
@@ -218,35 +233,37 @@ void leerArchivosYGuardarDatos()		//Esta funcion se encarga del proceso de lectu
 			break;	
 	}
 	fclose(archivo_nodos);
-	for (int i = 0; i < nodos; ++i)
+}
+char* generarConjunto()
+{
+
+	char *conjunto;
+	conjunto = (char*)malloc(sizeof(char)*NUMERO_NODOS);
+	for (int i = 1; i < NUMERO_NODOS+1; ++i)
 	{
-		for (int j = 0; j < nodos; ++j)
-		{
-			printf(" |%i|  ",MATRIZ_ADYACENCIA[i][j]);
-		}
-		printf("\n");	
+		char nodo = i+'0';
+		conjunto[i-1] = nodo;
 	}
+	return conjunto;
 }
 
 
 int main(int argc, char const *argv[])
 {
+	char* conjunto_a_permutar, **todas_las_permutaciones;
+	//Lectura del archivo de entrada
 	recibirNombreArchivo();
 	leerArchivosYGuardarDatos();
-
 	liberarArreglo1(NOMBRE_ARCHIVO);
 
-	char* xd, **xd2;
-	xd = (char*)malloc(sizeof(char)*4);
-	strcpy(xd,"1234");
-	xd2 = permutaciones(xd);
+	//Fuerza bruta
+	conjunto_a_permutar = generarConjunto();
+	todas_las_permutaciones = permutaciones(conjunto_a_permutar);
 	
-	printf("EL NUMERO DE PERMUTACIONES ES: %i \n\n",NUMERO_PERMUTACIONES);
+	//Generando las soluciones
+	buscarMinimo(todas_las_permutaciones);
 
-	for (int i = 0; i < NUMERO_PERMUTACIONES; ++i)
-		printf(" [%s] ",xd2[i]);
-	printf("\n");
-
-	liberarArreglo1(xd);
-	liberarArreglo2(xd2,NUMERO_PERMUTACIONES);
+	liberarArreglo1(conjunto_a_permutar);
+	liberarArregloInt(MATRIZ_ADYACENCIA,NUMERO_NODOS);
+	liberarArregloChar(todas_las_permutaciones,NUMERO_PERMUTACIONES);
 }
