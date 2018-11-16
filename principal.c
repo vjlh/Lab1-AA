@@ -1,5 +1,5 @@
 #include "definiciones.h"
-	
+//Autor: Valentina Ligueño	
 int main(int argc, char const *argv[])
 {
 	char* conjunto_a_permutar, **todas_las_permutaciones;

@@ -181,6 +181,7 @@ char** bruteForce(char *lista)
 		{
 			char **listaTemp;
 			listaTemp = insertarMultiple(lista_permutaciones[i],lista[0]); 
+
 			for (int i = 0; i < largoConjuntos+1; ++i)
 			{
 				lista_permuFinal[j] = listaTemp[i];
