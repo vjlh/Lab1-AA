@@ -1,10 +1,17 @@
 #include "definiciones.h"
 //FUNCIONES PARA LIBERAR MEMORIA
+
+//Libera un arreglo de char creado solicitando memoria al sistema
+//ENTRADAS: Arreglo de char
+//SALIDAS: No hay, simplemente libera le memoria que dicho arreglo estaba utilizando
 void liberarArreglo1(char* arreglo)
 {
 	free(arreglo);
 }
 
+//Libera un arreglo de arreglos de char creado solicitando memoria al sistema
+//ENTRADAS: Arreglo de arreglos de char y el largo de dicho arreglo
+//SALIDAS: No hay, simplemente libera le memoria que dicho arreglo estaba utilizando
 void liberarArregloChar(char** arreglo,int largo)
 {
 	for (int i = 0; i < largo; ++i)
@@ -13,6 +20,10 @@ void liberarArregloChar(char** arreglo,int largo)
 	}
 	free(arreglo);
 }
+
+//Libera un arreglo de arreglos de enteros creado solicitando memoria al sistema
+//ENTRADAS: Arreglo de arreglos de enteros y el largo de dicho arreglo
+//SALIDAS: No hay, simplemente libera le memoria que dicho arreglo estaba utilizando
 void liberarArregloInt(int** arreglo,int largo)
 {
 	for (int i = 0; i < largo; ++i)
@@ -22,6 +33,10 @@ void liberarArregloInt(int** arreglo,int largo)
 	free(arreglo);
 }
 
+//Imprime por pantalla todos los costos que va calculando en buscar minimo y su camino asociado, cabe destacar
+//Que dicha impresión de resultados se hará solo cuando se compile el programa en modo DEBUG
+//ENTRADAS: El camino actual que está siendo evaluado y su costo
+//SALIDAS: No hay, ya que va imprimiendo por pantalla lo descrito anteriormente
 void printCurrent(char* conjunto,int costo){
 	#ifdef DEBUG
 	
@@ -37,6 +52,10 @@ void printCurrent(char* conjunto,int costo){
 }
 
 //FUNCIONES DE INSERCIÓN DE UN ELEMENTO EN UN ARREGLO
+
+//Inserta un char en una posicion X de un arreglo de char
+//ENTRADAS: El arreglo en el que se quiere hacer la insercion, el carácter a insertar y la posicion en que se quiere insertar
+//SALIDAS: Devuelve el arreglo con el carácter insertado
 char* insertarNumero(char* lista,char numero,int posicion)
 {
 	char *listaInsertada;
@@ -59,6 +78,10 @@ char* insertarNumero(char* lista,char numero,int posicion)
 	return listaInsertada;
 }
 
+//Inserta un char en una todas las posibles posiciones de un arreglo de char
+//ENTRADAS: El arreglo en el que se quiere hacer la insercion, el carácter a insertar
+//SALIDAS: Devuelve un arreglo de arreglos con todas las listas generadas al insertar el char en las distintas posiciones
+//Posibles, por ejemplo "12" y "3" -> entrega de salida ["312","132","123"]
 char** insertarMultiple(char* lista,char numero)
 {
 	char **listaDevuelta;
@@ -74,12 +97,15 @@ char** insertarMultiple(char* lista,char numero)
 	return listaDevuelta;
 }
 
-//FUNCION QUE DADO UN CONJUNTO DE POSIBLES SOLUCIONES, ENCUENTRA LA QUE TIENE EL COSTO MINIMO
+//FUNCION QUE DADO UN CONJUNTO DE POSIBLES SOLUCIONES, ENCUENTRA LA QUE TIENE EL COSTO MINIMO SEGÚN LA MATRIZ DE
+//ADYACENCIA QUE SE GENERA CON EL ARCHIVO DE ENTRADA
+//ENTRADAS: Arreglo de arreglos de char con conjuntos de nodos permutados (generados por la funcion bruteForce)
+//SALIDAS: No tiene, ya que la solución la escribe en un archivo de salida
 void buscarMinimo(char** permutadas)
 {
 	FILE* archivo_salida;
 	int numNodos = strlen(permutadas[0]);
-	int minimo = 12345678;
+	int minimo = 123456789;
 	int indice = -1;
 
 	for (int i = 0; i < NUMERO_PERMUTACIONES; ++i)
@@ -112,7 +138,9 @@ void buscarMinimo(char** permutadas)
 
 }
 
-//FUNCIÓN DE FUERZA BRUTA, QUE GENERA UN CONJUNTO CON TODAS LAS POSIBLES SOLUCIONES
+//FUNCIÓN DE FUERZA BRUTA, QUE GENERA UN CONJUNTO CON TODAS LAS POSIBLES SOLUCIONES A TRAVÉS DE LA RECURSIÓN
+//ENTRADAS: Arreglo de Char, que contiene el conjunto a permutar, por ejemplo "123"
+//SALIDA: Arreglo de arreglos de char, que contiene todas las permutaciones hechas al conjunto inicial, por ejem ["123", "321", "231"...]
 char** bruteForce(char *lista)
 {
 	int largo = strlen(lista);
@@ -166,6 +194,10 @@ char** bruteForce(char *lista)
 }
 
 //FUNCIONES DE LECTURA Y ALMACENAMIENTO DE LOS DATOS DEL ARCHIVO DE ENTRADA
+
+//Recibe el nombre del archivo de entrada pidiendoselo por pantalla al usuario
+//ENTRADAS: No tiene, ya que el usuario hace el ingreso manual del nombre
+//SALIDAS: No tiene porque se tiene una variable global que almacenará el nombre
 void recibirNombreArchivo() 
 {
 	FILE* archivo; //
@@ -185,9 +217,14 @@ void recibirNombreArchivo()
 	} while (archivo == NULL);
 	fclose(archivo);
 }
+//Esta funcion se encarga del proceso de lectura y obtencion de los datos del archivo de entrada y su posterior traspaso
+//A la matriz de adyacencia
+//ENTRADAS: No posee, ya que toma el nombre del archivo que se almacenó gracias a la funcion anterior y de ahi comienza a operar
+//SALIDAS: No genera salidas, porque el almacenamiento que hace, lo hace en la matriz declarada de manera global, estas
+//Decaraciones globales se hacen con el fin de poder acceder a estos datos desde cualquier funcion sin necesidad de estar
+//Pidiendolos de parámetros, al momento de dejar de ser usados se libera la memoria correspondiente
 
-
-void leerArchivosYGuardarDatos()		//Esta funcion se encarga del proceso de lectura y obtencion de los datos del archivo
+void leerArchivosYGuardarDatos()		
 {										//primero cuenta cuantas lineas tiene el archivo	
 	FILE* archivo_nodos;		//hecho esto, pasa todas las instrucciones que están en el archivo
 	int nodo1, nodo2, costo, aux2, i, largo;	//y los registros o direcciones de memoria involucrados en ella
@@ -246,7 +283,12 @@ void leerArchivosYGuardarDatos()		//Esta funcion se encarga del proceso de lectu
 	}
 	fclose(archivo_nodos);
 }
+
 //FUNCION QUE GENERA EL CONJUNTO DE NODOS A PERMUTAR
+//ENTRADAS: No tiene, ya que al momento de la lectura del archivo se guarda en una variable global el numero
+//total de nodos a permutar
+//SALIDAS: genera un arreglo de char que contiene todo el conjunto inicial a permutar.
+//Por ejemplo si la cantidad de nodos es 5, el conjunto generado será "12345"
 char* generarConjunto()
 {
 

@@ -15,6 +15,7 @@ int main(int argc, char const *argv[])
 	//Generando las soluciones
 	buscarMinimo(todas_las_permutaciones);
 
+	//Liberando memoria
 	liberarArreglo1(conjunto_a_permutar);
 	liberarArregloInt(MATRIZ_ADYACENCIA,NUMERO_NODOS);
 	liberarArregloChar(todas_las_permutaciones,NUMERO_PERMUTACIONES);
