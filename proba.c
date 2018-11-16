@@ -8,7 +8,7 @@ int** MATRIZ_ADYACENCIA;
 int NUMERO_PERMUTACIONES;
 char *NOMBRE_ARCHIVO;
 
-
+//FUNCIONES PARA LIBERAR MEMORIA
 void liberarArreglo1(char* arreglo)
 {
 	free(arreglo);
@@ -30,6 +30,22 @@ void liberarArregloInt(int** arreglo,int largo)
 	}
 	free(arreglo);
 }
+
+void printCurrent(char* conjunto,int costo){
+	#ifdef DEBUG
+	
+	printf("enter para continuar...\n");
+	while(getchar() != '\n');
+	
+	printf("\nCamino: 0 - ");
+	for (int i = 0; i < strlen(conjunto); ++i)
+		printf("%c - ",conjunto[i]);
+	printf("0\nCon un costo de : %i\n",costo);
+	
+	#endif
+}
+
+//FUNCIONES DE INSERCIÓN DE UN ELEMENTO EN UN ARREGLO
 char* insertarNumero(char* lista,char numero,int posicion)
 {
 	char *listaInsertada;
@@ -52,11 +68,27 @@ char* insertarNumero(char* lista,char numero,int posicion)
 	return listaInsertada;
 }
 
+char** insertarMultiple(char* lista,char numero)
+{
+	char **listaDevuelta;
+	int largoArray = strlen(lista);
+	listaDevuelta = (char**)malloc(sizeof(char*)*(largoArray+1));
+
+	for (int i = 0; i < largoArray+1; ++i)
+	{
+		listaDevuelta[i] = (char*)malloc(sizeof(char)*(largoArray+1));
+		listaDevuelta[i] = insertarNumero(lista,numero,i);
+	}
+
+	return listaDevuelta;
+}
+
+//FUNCION QUE DADO UN CONJUNTO DE POSIBLES SOLUCIONES, ENCUENTRA LA QUE TIENE EL COSTO MINIMO
 void buscarMinimo(char** permutadas){
 	FILE* archivo_salida;
 	int numNodos = strlen(permutadas[0]);
 	int minimo = 12345678;
-	int indice = 0;
+	int indice = -1;
 
 	for (int i = 0; i < NUMERO_PERMUTACIONES; ++i)
 	{
@@ -67,6 +99,7 @@ void buscarMinimo(char** permutadas){
 			int n2 = permutadas[i][j+1] - '0' - 1;
 			costo = costo + MATRIZ_ADYACENCIA[n1][n2];
 		}
+		printCurrent(permutadas[i],costo);
 		if (costo < minimo)
 		{
 			minimo = costo;
@@ -87,22 +120,8 @@ void buscarMinimo(char** permutadas){
 
 }
 
-char** insertarMultiple(char* lista,char numero)
-{
-	char **listaDevuelta;
-	int largoArray = strlen(lista);
-	listaDevuelta = (char**)malloc(sizeof(char*)*(largoArray+1));
-
-	for (int i = 0; i < largoArray+1; ++i)
-	{
-		listaDevuelta[i] = (char*)malloc(sizeof(char)*(largoArray+1));
-		listaDevuelta[i] = insertarNumero(lista,numero,i);
-	}
-
-	return listaDevuelta;
-}
-
-char** permutaciones(char *lista)
+//FUNCIÓN DE FUERZA BRUTA, QUE GENERA UN CONJUNTO CON TODAS LAS POSIBLES SOLUCIONES
+char** bruteForce(char *lista)
 {
 	int largo = strlen(lista);
 	if (largo == 0)
@@ -124,7 +143,7 @@ char** permutaciones(char *lista)
 		for (i = 0; i < largo-1; ++i)
 			nueva_lista[i] = lista[i+1];
 		
-		lista_permutaciones = permutaciones(nueva_lista);
+		lista_permutaciones = bruteForce(nueva_lista);
 
 		largoListaPerm = 1;
 		largoConjuntos = strlen(*lista_permutaciones);
@@ -154,6 +173,7 @@ char** permutaciones(char *lista)
 	}	
 }
 
+//FUNCIONES DE LECTURA Y ALMACENAMIENTO DE LOS DATOS DEL ARCHIVO DE ENTRADA
 void recibirNombreArchivo() 
 {
 	FILE* archivo; //
@@ -234,6 +254,7 @@ void leerArchivosYGuardarDatos()		//Esta funcion se encarga del proceso de lectu
 	}
 	fclose(archivo_nodos);
 }
+//FUNCION QUE GENERA EL CONJUNTO DE NODOS A PERMUTAR
 char* generarConjunto()
 {
 
@@ -243,9 +264,11 @@ char* generarConjunto()
 	{
 		char nodo = i+'0';
 		conjunto[i-1] = nodo;
+
 	}
 	return conjunto;
 }
+
 
 
 int main(int argc, char const *argv[])
@@ -258,7 +281,7 @@ int main(int argc, char const *argv[])
 
 	//Fuerza bruta
 	conjunto_a_permutar = generarConjunto();
-	todas_las_permutaciones = permutaciones(conjunto_a_permutar);
+	todas_las_permutaciones = bruteForce(conjunto_a_permutar);
 	
 	//Generando las soluciones
 	buscarMinimo(todas_las_permutaciones);
